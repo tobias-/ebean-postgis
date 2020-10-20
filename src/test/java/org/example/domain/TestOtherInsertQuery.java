@@ -1,7 +1,11 @@
 package org.example.domain;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import io.ebean.DB;
 import io.ebean.Ebean;
-import jdk.nashorn.internal.ir.annotations.Ignore;
+
+import org.geolatte.geom.G2D;
 import org.geolatte.geom.Point;
 import org.geolatte.geom.Polygon;
 import org.geolatte.geom.codec.Wkt;
@@ -9,20 +13,21 @@ import org.geolatte.geom.LineString;
 import org.geolatte.geom.MultiLineString;
 import org.geolatte.geom.MultiPoint;
 import org.geolatte.geom.MultiPolygon;
+import org.geolatte.geom.crs.CoordinateReferenceSystem;
+import org.geolatte.geom.crs.CrsRegistry;
 import org.testng.annotations.Test;
 
 import java.sql.SQLException;
 import java.util.List;
 
 public class TestOtherInsertQuery {
+  private static final CoordinateReferenceSystem<G2D> EPSG_4674 = CrsRegistry.getGeographicCoordinateReferenceSystemForEPSG(4674);
 
   /**
    * Not automated this test yet.
    */
-  @Ignore
-  @Test
+  @Test(enabled = false)
   public void insert() throws SQLException {
-
 
     List<OtherBeanGeoLatte> list = Ebean.find(OtherBeanGeoLatte.class).findList();
     for (OtherBeanGeoLatte OtherBeanGeoLatte : list) {
@@ -37,13 +42,13 @@ public class TestOtherInsertQuery {
     System.out.println(list1);
 
 
-    Point point = (Point) Wkt.fromWkt("SRID=4674;POINT (12 23)");
-    Polygon poly = (Polygon) Wkt.fromWkt("SRID=4674;POLYGON((2 2, 2 -2, -2 -2, -2 2, 2 2))");
+    Point<G2D> point = (Point) Wkt.fromWkt("SRID=4674;POINT (12 23)");
+    Polygon<G2D> poly = (Polygon) Wkt.fromWkt("SRID=4674;POLYGON((2 2, 2 -2, -2 -2, -2 2, 2 2))");
 
-    LineString lineString = (LineString)Wkt.fromWkt("SRID=4674;LINESTRING(0 0, 1 2)");
-    MultiLineString multiLineString = (MultiLineString)Wkt.fromWkt("SRID=4674;MULTILINESTRING((0 0, 1 2), (1 2, 3 -1))");
-    MultiPoint multiPoint = (MultiPoint)Wkt.fromWkt("SRID=4674;MULTIPOINT(10 40, 40 30, 20 20, 30 10)");
-    MultiPolygon mpoly =  (MultiPolygon)Wkt.fromWkt("SRID=4674;MULTIPOLYGON(((1 1, 1 -1, -1 -1, -1 1, 1 1)),((1 1, 3 1, 3 3, 1 3, 1 1)))");
+    LineString<G2D> lineString = (LineString)Wkt.fromWkt("SRID=4674;LINESTRING(0 0, 1 2)");
+    MultiLineString<G2D> multiLineString = (MultiLineString)Wkt.fromWkt("SRID=4674;MULTILINESTRING((0 0, 1 2), (1 2, 3 -1))");
+    MultiPoint<G2D> multiPoint = (MultiPoint)Wkt.fromWkt("SRID=4674;MULTIPOINT(10 40, 40 30, 20 20, 30 10)");
+    MultiPolygon<G2D> mpoly =  (MultiPolygon)Wkt.fromWkt("SRID=4674;MULTIPOLYGON(((1 1, 1 -1, -1 -1, -1 1, 1 1)),((1 1, 3 1, 3 3, 1 3, 1 1)))");
 
     OtherBeanGeoLatte p = new OtherBeanGeoLatte();
     p.setName("geolatte at "+System.currentTimeMillis());
@@ -53,7 +58,13 @@ public class TestOtherInsertQuery {
     p.setMpoly(mpoly);
     p.setMultiPoint(multiPoint);
     p.setMultiLineString(multiLineString);
+    DB.save(p);
 
-    Ebean.save(p);
+    p.setMpoly2(new MultiPolygon<>(EPSG_4674));
+    DB.save(p);
+
+    OtherBeanGeoLatte p2 = DB.find(OtherBeanGeoLatte.class, p.getId());
+    assertThat(p2).isNotNull();
+    assertThat(p2.getMpoly2()).isEqualTo(p.getMpoly2());
   }
 }

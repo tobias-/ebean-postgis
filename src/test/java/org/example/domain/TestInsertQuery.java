@@ -1,7 +1,10 @@
 package org.example.domain;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import io.ebean.DB;
 import io.ebean.Ebean;
-import jdk.nashorn.internal.ir.annotations.Ignore;
+
 import org.postgis.LineString;
 import org.postgis.MultiLineString;
 import org.postgis.MultiPoint;
@@ -18,8 +21,7 @@ public class TestInsertQuery {
   /**
    * Not automated this test yet.
    */
-  @Ignore
-  @Test
+  @Test(enabled = false)
   public void insert() throws SQLException {
 
 
@@ -51,8 +53,16 @@ public class TestInsertQuery {
     p.setMultiLineString(multiLineString);
     p.setMultiPoint(multiPoint);
     p.setMpoly(mpoly);
+    DB.save(p);
+    final MultiPolygon mpoly2 = new MultiPolygon(new Polygon[0]);
+    mpoly2.setSrid(4674);
+    p.setMpoly2(mpoly2);
 
     Ebean.save(p);
+
+    MyBean p2 = DB.find(MyBean.class, p.getId());
+    assertThat(p2).isNotNull();
+    assertThat(p2.getMpoly2()).isEqualTo(p.getMpoly2());
 
     List<String> content =
       Ebean.find(MyBean.class)

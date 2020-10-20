@@ -1,6 +1,7 @@
 package org.example.domain;
 
 
+import org.geolatte.geom.G2D;
 import org.geolatte.geom.LineString;
 import org.geolatte.geom.MultiLineString;
 import org.geolatte.geom.MultiPoint;
@@ -17,17 +18,19 @@ public class OtherBeanGeoLatte extends BaseEntity {
 
   String name;
 
-  Point point;
+  Point<G2D> point;
 
-  Polygon poly;
+  Polygon<G2D> poly;
 
-  LineString lineString;
+  LineString<G2D> lineString;
 
-  MultiLineString multiLineString;
+  MultiLineString<G2D> multiLineString;
 
-  MultiPoint multiPoint;
+  MultiPoint<G2D> multiPoint;
 
-  MultiPolygon mpoly;
+  MultiPolygon<G2D> mpoly;
+
+  MultiPolygon<G2D> mpoly2;
 
   public String getName() {
     return name;
@@ -37,51 +40,59 @@ public class OtherBeanGeoLatte extends BaseEntity {
     this.name = name;
   }
 
-  public Point getPoint() {
+  public Point<G2D> getPoint() {
     return point;
   }
 
-  public void setPoint(Point point) {
+  public void setPoint(Point<G2D> point) {
     this.point = point;
   }
 
-  public Polygon getPoly() {
+  public Polygon<G2D> getPoly() {
     return poly;
   }
 
-  public void setPoly(Polygon poly) {
+  public void setPoly(Polygon<G2D> poly) {
     this.poly = poly;
   }
 
-  public MultiPolygon getMpoly() {
+  public MultiPolygon<G2D> getMpoly() {
     return mpoly;
   }
 
-  public void setMpoly(MultiPolygon mpoly) {
+  public void setMpoly(MultiPolygon<G2D> mpoly) {
     this.mpoly = mpoly;
   }
 
-  public LineString getLineString() {
+  public LineString<G2D> getLineString() {
     return lineString;
   }
 
-  public void setLineString(LineString lineString) {
+  public void setLineString(LineString<G2D> lineString) {
     this.lineString = lineString;
   }
 
-  public MultiLineString getMultiLineString() {
+  public MultiLineString<G2D> getMultiLineString() {
     return multiLineString;
   }
 
-  public void setMultiLineString(MultiLineString multiLineString) {
+  public void setMultiLineString(MultiLineString<G2D> multiLineString) {
     this.multiLineString = multiLineString;
   }
 
-  public MultiPoint getMultiPoint() {
+  public MultiPoint<G2D> getMultiPoint() {
     return multiPoint;
   }
 
-  public void setMultiPoint(MultiPoint multiPoint) {
+  public void setMultiPoint(MultiPoint<G2D> multiPoint) {
     this.multiPoint = multiPoint;
+  }
+
+  public MultiPolygon<G2D> getMpoly2() {
+    return mpoly2;
+  }
+
+  public void setMpoly2(final MultiPolygon<G2D> mpoly2) {
+    this.mpoly2 = mpoly2;
   }
 }

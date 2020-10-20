@@ -28,6 +28,8 @@ public class MyBean extends BaseEntity {
 
   MultiPolygon mpoly;
 
+  MultiPolygon mpoly2;
+
   public String getName() {
     return name;
   }
@@ -82,5 +84,13 @@ public class MyBean extends BaseEntity {
 
   public void setMpoly(MultiPolygon mpoly) {
     this.mpoly = mpoly;
+  }
+
+  public MultiPolygon getMpoly2() {
+    return mpoly2;
+  }
+
+  public void setMpoly2(final MultiPolygon mpoly2) {
+    this.mpoly2 = mpoly2;
   }
 }
